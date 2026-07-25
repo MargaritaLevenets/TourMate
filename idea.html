@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TourMate — ідея</title>
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --surface: #ffffff;
+    --text: #1c1a17;
+    --muted: #6b6560;
+    --line: #e8e4de;
+    --accent: #1f7a63;
+    --accent-soft: #e7f2ee;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16151a;
+      --surface: #1e1d23;
+      --text: #f2f0ec;
+      --muted: #a19b95;
+      --line: #2e2c34;
+      --accent: #5fc9a8;
+      --accent-soft: #223730;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 2.5rem 1.25rem 4rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 34rem;
+    margin: 0 auto;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 1.1rem 0 0.6rem;
+    font-size: 2.6rem;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+
+  .tagline {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  h2 {
+    margin: 0 0 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  section {
+    margin-top: 2.75rem;
+  }
+
+  .card {
+    padding: 1.25rem 1.35rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+
+  .card p {
+    margin: 0;
+  }
+
+  .card p + p {
+    margin-top: 0.75rem;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+
+  .num {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-top: 0.15rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  li strong {
+    display: block;
+    font-size: 1.02rem;
+    font-weight: 650;
+  }
+
+  li span.desc {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--muted);
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 40rem) {
+    body { padding-top: 4rem; }
+    h1 { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <span class="badge">Пет-проєкт</span>
+    <h1>TourMate</h1>
+    <p class="tagline">Усі тури гіда — розклад, маршрути, туристи й нотатки — в одному місці, у телефоні.</p>
+  </header>
+
+  <section>
+    <h2>Для кого</h2>
+    <div class="card">
+      <p>Для приватного гіда, який працює сам на себе: сам домовляється про тури, сам веде екскурсії та сам рахує гроші.</p>
+      <p>Це особистий інструмент гіда — туристи застосунком не користуються.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Що всередині</h2>
+    <ul>
+      <li>
+        <span class="num">1</span>
+        <div>
+          <strong>Розклад</strong>
+          <span class="desc">Календар турів і записи туристів. Видно, що сьогодні, що завтра, і хто прийде.</span>
+        </div>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <div>
+          <strong>Тур наживо</strong>
+          <span class="desc">Маршрут по точках і власні тексти-підказки просто в руці — під час екскурсії.</span>
+        </div>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <div>
+          <strong>Клієнти й гроші</strong>
+          <span class="desc">Картки туристів, статуси оплат і підсумок заробітку без окремої таблиці.</span>
+        </div>
+      </li>
+      <li>
+        <span class="num">4</span>
+        <div>
+          <strong>Матеріали</strong>
+          <span class="desc">Фото, факти, посилання й нотатки, зібрані в бібліотеку та підчеплені до турів.</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Чому це потрібно</h2>
+    <div class="card">
+      <p>Зараз у гіда робота розкидана: розклад — у нотатках, контакти — у месенджерах, тексти екскурсій — у документах, гроші — у голові. Під час самої екскурсії підглянути в усе це незручно.</p>
+      <p>TourMate збирає це в один застосунок, зроблений насамперед для телефона.</p>
+    </div>
+  </section>
+
+  <footer>
+    Статус: ідея. Дизайн і код ще не починалися.
+  </footer>
+
+</div>
+</body>
+</html>
