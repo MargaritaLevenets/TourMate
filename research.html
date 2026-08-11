@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TourMate — дослідження</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23131217'/><circle cx='16' cy='16' r='7' fill='none' stroke='%235fc9a8' stroke-width='2.5'/><circle cx='16' cy='16' r='2.5' fill='%235fc9a8'/></svg>">
+<style>
+  :root {
+    --bg: #131217;
+    --bg-deep: #0e0d11;
+    --surface: #1b1a20;
+    --surface-2: #22212a;
+    --text: #f2f0ec;
+    --muted: #a29c96;
+    --dim: #757079;
+    --line: #2b2933;
+    --line-soft: #232129;
+    --accent: #5fc9a8;
+    --accent-soft: #1d3b33;
+    --warn: #e0a458;
+    --warn-soft: #3a2c1a;
+    --serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --col: 41rem;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- каркас ---------- */
+
+  .wrap { max-width: 64rem; margin: 0 auto; padding: 0 1.25rem; }
+  .col  { max-width: var(--col); }
+
+  section > * + * { margin-top: 1.15rem; }
+
+  p { margin: 0; }
+  strong { font-weight: 650; }
+
+  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset: 0.2em; }
+  a:hover { text-decoration-color: var(--accent); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* ---------- шапка ---------- */
+
+  header.top {
+    padding: 4rem 0 2.5rem;
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(90rem 26rem at 12% -8%, rgba(95, 201, 168, 0.09), transparent 62%),
+      var(--bg-deep);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    margin: 1.1rem 0 0.7rem;
+    font-size: clamp(2.4rem, 7vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+
+  .tagline {
+    font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 34rem;
+  }
+
+  .meta {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.86rem;
+    color: var(--dim);
+  }
+  .meta b { color: var(--muted); font-weight: 600; }
+
+  /* ---------- легенда джерел ---------- */
+
+  .legend {
+    margin-top: 2.25rem;
+    padding: 1.15rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    max-width: 44rem;
+  }
+  .legend h2 {
+    margin: 0 0 0.85rem;
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .legend ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; }
+  .legend li { font-size: 0.92rem; color: var(--muted); line-height: 1.5; }
+  .legend li b { color: var(--text); font-weight: 600; }
+
+  /* ---------- навігація ---------- */
+
+  nav.parts {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.parts ol {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav.parts ol::-webkit-scrollbar { display: none; }
+  nav.parts a {
+    display: block;
+    padding: 0.9rem 0.85rem;
+    font-size: 0.83rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  nav.parts a:hover { color: var(--muted); }
+  nav.parts a[aria-current="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+  nav.parts .n { color: var(--line); margin-right: 0.4rem; font-variant-numeric: tabular-nums; }
+  nav.parts a[aria-current="true"] .n { color: color-mix(in srgb, var(--accent) 50%, transparent); }
+
+  /* ---------- секції ---------- */
+
+  .part { padding: 4.5rem 0 1rem; }
+  .part + .part { border-top: 1px solid var(--line-soft); }
+
+  .part-head { margin-bottom: 2.5rem; }
+  .part-num {
+    display: block;
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    letter-spacing: 0.28em;
+    color: var(--dim);
+    margin-bottom: 0.5rem;
+  }
+  .part-head h2 {
+    font-family: var(--serif);
+    margin: 0;
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .part-head p {
+    margin-top: 0.7rem;
+    color: var(--muted);
+    max-width: var(--col);
+    font-size: 1.02rem;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    margin: 3rem 0 0;
+    font-size: 1.4rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  h3 + * { margin-top: 0.85rem; }
+
+  h4 {
+    margin: 2.25rem 0 0;
+    font-size: 0.76rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  h4 + * { margin-top: 0.7rem; }
+
+  .lead { font-size: 1.08rem; color: var(--muted); }
+
+  /* ---------- мітки джерел ---------- */
+
+  .src {
+    display: inline-block;
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    line-height: 1.4;
+  }
+  .src:hover { border-bottom-color: var(--accent); }
+  .src::before { content: "↗ "; opacity: 0.6; }
+  .src.shot::before { content: "▣ "; }
+
+  .unver {
+    display: inline-block;
+    padding: 0.05rem 0.5rem 0.1rem;
+    border-radius: 999px;
+    background: var(--warn-soft);
+    color: var(--warn);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .callout {
+    padding: 1.15rem 1.35rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    max-width: var(--col);
+  }
+  .callout.warn {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--warn-soft) 60%, var(--surface)), var(--surface));
+    border-color: color-mix(in srgb, var(--warn) 28%, var(--line));
+  }
+  .callout.fix {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 45%, var(--surface)), var(--surface));
+    border-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+  }
+  .callout > * + * { margin-top: 0.65rem; }
+  .callout .k {
+    font-size: 0.74rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warn);
+  }
+  .callout.fix .k { color: var(--accent); }
+
+  /* ---------- таблиці ---------- */
+
+  .scroller {
+    margin-top: 1.15rem;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+    line-height: 1.5;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0.95rem 1.1rem 0.15rem;
+    font-size: 0.8rem;
+    font-weight: 650;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  th, td {
+    padding: 0.8rem 1.1rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface-2);
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover td { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
+  td.name, th[scope="row"] {
+    font-weight: 650;
+    white-space: nowrap;
+    text-align: left;
+    vertical-align: top;
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  tbody tr:last-child th[scope="row"] { border-bottom: 0; }
+  td.src-cell { font-size: 0.85rem; min-width: 12rem; }
+  td .q { color: var(--muted); font-style: italic; }
+
+  /* таблиця оцінок */
+  table.scores { font-variant-numeric: tabular-nums; }
+  table.scores td.n, table.scores th.n { text-align: center; width: 3.1rem; padding-left: 0.4rem; padding-right: 0.4rem; }
+  table.scores td.n { color: var(--muted); }
+  table.scores td.sum { text-align: center; font-weight: 700; color: var(--text); border-left: 1px solid var(--line); }
+  table.scores th.sum { text-align: center; border-left: 1px solid var(--line); }
+  td.hi {
+    color: var(--accent);
+    font-weight: 700;
+    background: color-mix(in srgb, var(--accent) 11%, transparent);
+  }
+  td.lo {
+    color: var(--warn);
+    font-weight: 700;
+    background: color-mix(in srgb, var(--warn) 11%, transparent);
+  }
+
+  .tnote { margin-top: 0.8rem; font-size: 0.88rem; color: var(--dim); max-width: var(--col); }
+
+  /* ---------- скріни ---------- */
+
+  .shots {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+  figure {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .zoom {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--bg-deep);
+    cursor: zoom-in;
+    line-height: 0;
+    position: relative;
+  }
+  .zoom img {
+    width: 100%;
+    height: 15rem;
+    object-fit: cover;
+    object-position: var(--pos, top center);
+    display: block;
+    transition: opacity 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .zoom:hover img { opacity: 0.82; }
+  .zoom::after {
+    content: "Збільшити";
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg-deep) 82%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .zoom:hover::after, .zoom:focus-visible::after { opacity: 1; transform: translateY(0); }
+  figcaption {
+    padding: 0.85rem 1.05rem 1rem;
+    font-size: 0.87rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  figcaption > b:first-child { display: block; color: var(--text); font-weight: 650; font-size: 0.9rem; margin-bottom: 0.15rem; }
+  figcaption b { color: var(--text); font-weight: 650; }
+  figcaption .fn { display: block; margin-top: 0.4rem; font-size: 0.78rem; color: var(--dim); }
+
+  /* ---------- лайтбокс ---------- */
+
+  dialog.box {
+    width: min(94vw, 46rem);
+    max-width: none;
+    max-height: 92vh;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    color: var(--text);
+    overflow: hidden;
+  }
+  dialog.box::backdrop { background: rgba(8, 8, 11, 0.82); backdrop-filter: blur(3px); }
+  dialog.box[open] { animation: pop 0.32s cubic-bezier(0.2, 0.9, 0.25, 1); }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.975); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    dialog.box[open] { animation: none; }
+    .zoom img, .zoom::after { transition: none; }
+  }
+  .box-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0.85rem 0.75rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .box-bar p { font-size: 0.88rem; color: var(--muted); }
+  .box-bar button {
+    flex: none;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .box-bar button:hover { color: var(--text); border-color: var(--dim); }
+  .box-scroll { overflow: auto; max-height: calc(92vh - 3.6rem); background: var(--bg-deep); }
+  .box-scroll img { display: block; width: 100%; }
+
+  /* ---------- патерни ---------- */
+
+  .pattern { padding-top: 0.25rem; }
+  .pattern dl { margin: 0.85rem 0 0; display: grid; gap: 0.55rem; }
+  .pattern dt {
+    font-size: 0.73rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .pattern dd { margin: 0 0 0.35rem; }
+  .pattern dd:last-child { margin-bottom: 0; }
+  .pattern dd.break { color: var(--warn); }
+  .pattern dd.break b { color: var(--warn); }
+
+  /* ---------- висновки ---------- */
+
+  .verdict { display: grid; gap: 1rem; margin-top: 1.5rem; }
+  @media (min-width: 52rem) { .verdict { grid-template-columns: repeat(3, 1fr); } }
+  .verdict > div {
+    padding: 1.3rem 1.35rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+  }
+  .verdict .tag {
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .verdict .yes .tag { color: var(--accent); }
+  .verdict .maybe .tag { color: var(--muted); }
+  .verdict .no .tag { color: var(--warn); }
+  .verdict h4 { margin: 0.5rem 0 0; font-family: var(--serif); font-size: 1.25rem; letter-spacing: -0.01em; text-transform: none; color: var(--text); font-weight: 600; }
+  .verdict p { margin-top: 0.6rem; font-size: 0.95rem; color: var(--muted); }
+  .verdict.yes { }
+
+  ol.steps { margin: 1.15rem 0 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 0.75rem; max-width: var(--col); }
+  ol.steps li {
+    counter-increment: s;
+    position: relative;
+    padding: 1rem 1.2rem 1rem 3.1rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    font-size: 0.97rem;
+  }
+  ol.steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 1.1rem;
+    top: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.steps li b { display: block; margin-bottom: 0.15rem; }
+  ol.steps li span { color: var(--muted); font-size: 0.92rem; }
+
+  ul.plain { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.7rem; max-width: var(--col); }
+  ul.plain li { padding-left: 1.1rem; position: relative; color: var(--muted); }
+  ul.plain li::before { content: ""; position: absolute; left: 0; top: 0.68em; width: 5px; height: 5px; border-radius: 50%; background: var(--dim); }
+  ul.plain li b { color: var(--text); }
+
+  footer {
+    margin-top: 4rem;
+    padding: 2rem 0 4rem;
+    border-top: 1px solid var(--line);
+    color: var(--dim);
+    font-size: 0.88rem;
+  }
+  footer p + p { margin-top: 0.5rem; }
+
+  @media (max-width: 30rem) {
+    body { font-size: 16px; }
+    th, td { padding: 0.7rem 0.85rem; }
+    .part { padding-top: 3.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="badge">Дослідження</span>
+    <h1>Що ми дізналися<br>про ринок гіда</h1>
+    <p class="tagline">Конкуренти, бенчмарк поза галуззю, патерни головного екрана — і що з цього йде в першу версію TourMate.</p>
+
+    <div class="meta">
+      <span><b>Конкуренти:</b> 7 серпня 2026</span>
+      <span><b>Перевірка чисел і бенчмарк:</b> 11 серпня 2026</span>
+      <span><b>Інтерв'ю проведено:</b> жодного</span>
+    </div>
+
+    <div class="legend">
+      <h2>Правило джерел</h2>
+      <ul>
+        <li><a class="src" href="#">посилання</a> &nbsp;—&nbsp; сторінка, яку ми відкривали й перевіряли</li>
+        <li><a class="src shot" href="#">скрін</a> &nbsp;—&nbsp; кадр у <b>research/screens/</b>, можна відкрити тут же</li>
+        <li><span class="unver">дані не підтверджені</span> &nbsp;—&nbsp; записали раніше, джерела зараз немає</li>
+      </ul>
+      <p style="margin-top:0.9rem;font-size:0.9rem;color:var(--dim);line-height:1.5;">Остання мітка — не сором, а робота, яку ще треба зробити. Вигадувати джерело або писати число без сліду не можна.</p>
+    </div>
+  </div>
+</header>
+
+<nav class="parts" aria-label="Секції">
+  <div class="wrap">
+    <ol>
+      <li><a href="#konkurenty"><span class="n">01</span>Конкуренти</a></li>
+      <li><a href="#benchmark"><span class="n">02</span>Бенчмарк</a></li>
+      <li><a href="#paterny"><span class="n">03</span>Патерни</a></li>
+      <li><a href="#vysnovky"><span class="n">04</span>Висновки</a></li>
+    </ol>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══════════════ 01 ══════════════ -->
+<section class="part" id="konkurenty">
+  <div class="wrap">
+    <div class="part-head">
+      <span class="part-num">01</span>
+      <h2>Конкуренти</h2>
+      <p>Приватний гід, який працює сам на себе. Ринок — Канада. Туристи в дослідження не входять: вони не користувачі застосунку.</p>
+    </div>
+
+    <div class="col">
+      <h3>Рамка: ми не система бронювання</h3>
+      <p>Майже весь комерційний ринок побудований навколо продажу квитків і заробляє з комісії за бронювання. TourMate не продає нічого — він допомагає гіду <strong>вести</strong> роботу, яку той уже отримав. Тому порівняння «функція проти функції» буде оманливим: у них більша частина продукту — те, чого ми не робимо.</p>
+      <p style="color:var(--dim);font-size:0.92rem;">Це наша рамка, а не факт із джерела.</p>
+    </div>
+
+    <div class="callout warn" style="margin-top:1.5rem;">
+      <p class="k">Тривожний сигнал</p>
+      <p>Записано раніше: галузеві огляди пишуть, що одинаку операційна платформа не потрібна, поріг доцільності — приблизно три і більше гіди. <span class="unver">дані не підтверджені</span></p>
+      <p style="color:var(--muted);font-size:0.94rem;">Твердження ставить під сумнів усю ідею продукту — тому його треба або підтвердити, або зняти.</p>
+    </div>
+
+    <h3>Група 1. Хард — той самий продукт, та сама аудиторія</h3>
+    <div class="scroller">
+      <table>
+        <caption>Що знаємо про кожного</caption>
+        <thead>
+          <tr><th scope="col">Компанія</th><th scope="col">Що знаємо</th><th scope="col">Джерело</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Checkfront</th>
+            <td><b>$99/міс + 3%</b> за онлайн-броню, офлайн-броні без комісії. Комісійного тарифу без підписки <b>немає</b></td>
+            <td class="src-cell"><a class="src" href="https://www.checkfront.com/pricing">checkfront.com/pricing</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Rezgo</th>
+            <td><b>Без підписки</b>, лише комісія: 4.9% онлайн, 0.9% на місці. Телефон із ванкуверським кодом 604</td>
+            <td class="src-cell"><a class="src" href="https://www.rezgo.com/pricing">rezgo.com/pricing</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Peek Pro</th>
+            <td>Окремий застосунок <b>PeekPro Focus</b>, в описі: <span class="q">«Welcome to PeekPro Focus, designed specifically for guides!»</span> Публічної сторінки цін немає: <code>peek.com/pricing</code> віддає 404</td>
+            <td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/peekpro-focus-guide-app.png" data-title="PeekPro Focus — сторінка App Store" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">peekpro-focus-guide-app.png</button></td>
+          </tr>
+          <tr>
+            <th scope="row">Bókun</th>
+            <td>Належить Tripadvisor. Free $0 — 1 користувач, <b>без онлайн-продажу</b>; Start $49/міс + 1.5%; Plus $149/міс + 1.25%; Premium $499/міс + 1%</td>
+            <td class="src-cell"><a class="src" href="https://www.bokun.io/pricing">bokun.io/pricing</a></td>
+          </tr>
+          <tr>
+            <th scope="row">FareHarbor</th>
+            <td>Записано як лідера ринку, власник — Booking Holdings</td>
+            <td class="src-cell"><span class="unver">не підтверджено</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Anolla</th>
+            <td>Записано: заявляє безкоштовний тариф саме для гідів-одинаків</td>
+            <td class="src-cell"><span class="unver">не підтверджено</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout fix" style="margin-top:1.25rem;">
+      <p class="k">Виправлено 11.08.2026</p>
+      <p>У попередній версії стояло «Checkfront — модель без підписки, 3% з броні». Це <strong>хибно</strong>: підписка $99/міс є, і комісія 3% додається до неї. Ми записали Checkfront як дешевий вхід для одинака, а він насправді найдорожчий у групі.</p>
+    </div>
+
+    <h3>Група 2. Софт — інший продукт, та сама базова задача</h3>
+    <p class="col">Справжні конкуренти першої версії: гід уже ними користується і міняти нічого не збирається.</p>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th scope="col">Продукт</th><th scope="col">Чому в цій групі</th><th scope="col">Джерело</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Google Calendar</th><td>Тут живе розклад гіда. Прямий конкурент розділу «Розклад»</td><td class="src-cell"><a class="src" href="idea.html">idea.md</a></td></tr>
+          <tr><th scope="row">WhatsApp / Telegram</th><td>Сюди приходять записи туристів і тут лежать контакти</td><td class="src-cell"><a class="src" href="idea.html">idea.md</a></td></tr>
+          <tr><th scope="row">Notion</th><td>Тут лежать тексти екскурсій. Конкурент розділу «Матеріали»</td><td class="src-cell"><a class="src" href="idea.html">idea.md</a></td></tr>
+          <tr><th scope="row">Google Sheets</th><td>Облік оплат. Конкурент розділу «Клієнти й гроші»</td><td class="src-cell"><a class="src" href="idea.html">idea.md</a></td></tr>
+          <tr><th scope="row">Square Appointments</th><td>Записи + оплати для приватного спеціаліста в Канаді</td><td class="src-cell"><span class="unver">не підтверджено</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote"><code>idea.md</code> — наш власний документ, а не зовнішнє джерело. Він фіксує припущення про спосіб роботи гіда, <strong>яке ще не перевірене інтерв'ю</strong>.</p>
+
+    <h3>Порівняння п'ятьох за п'ятьма осями</h3>
+    <p class="col">Двоє з хард-групи, один із софт-групи, двоє аспіраційних.</p>
+
+    <div class="scroller">
+      <table>
+        <caption>Вісь 1 — Аудиторія</caption>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">На кого зроблений</th><th scope="col">Джерело</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Peek Pro</th><td>Оператори турів; Focus — «designed specifically for guides». Чи мається на увазі найманий гід оператора, чи самозайнятий, з опису не видно</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/peekpro-focus-guide-app.png" data-title="PeekPro Focus — сторінка App Store" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">Bókun</th><td>Оператори турів; тариф Free розрахований на 1 користувача</td><td class="src-cell"><a class="src" href="https://www.bokun.io/pricing">bokun.io</a></td></tr>
+          <tr><th scope="row">Google Calendar</th><td>Усі. 131 тис. оцінок в App Store</td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/google-calendar/id909319292">App Store</a></td></tr>
+          <tr><th scope="row">Wanderlog</th><td>Мандрівники, які планують свою поїздку — не гіди</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/wanderlog-app-screen-2.png" data-title="Wanderlog — вкладки маршруту" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">TripIt</th><td>Мандрівники. Належність до SAP Concur — <span class="unver">не підтверджено</span></td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/tripit-travel-planner/id311035142">App Store</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <caption>Вісь 2 — Основа продукту</caption>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">Головний об'єкт</th><th scope="col">Що це означає на екрані</th><th scope="col">Джерело</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Peek Pro</th><td>бронювання</td><td>Каса, ресурси, зміни персоналу. <span class="unver">усередину продукту не заходили</span></td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/peekpro-home.png" data-title="Peek Pro — головна сайту" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">Bókun</th><td>бронювання + канал продажу</td><td>Нижня навігація: Schedule · Pick-ups · Scan · Settings</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/bokun-app-screens.png" data-title="Bókun — екрани застосунку" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">Google Calendar</th><td>подія в часі</td><td>Місяць / тиждень / день; події самі підтягуються з Gmail, включно з рейсами й готелями</td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/google-calendar/id909319292">App Store</a></td></tr>
+          <tr><th scope="row">Wanderlog</th><td>маршрут як документ</td><td>Вкладки Overview · Itinerary · Explore · $ ; розділи «Notes» і «Places to visit»</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/wanderlog-app-screen-2.png" data-title="Wanderlog — вкладки маршруту" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">TripIt</th><td>стрічка підтверджень</td><td>День як вертикальна лінія: рейс, пересадка, авто, готель</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/tripit-app-screen-2.png" data-title="TripIt — день як вертикальна лінія" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <caption>Вісь 3 — Ключовий механізм</caption>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">Заради чого відкривають</th><th scope="col">Деталь, варта того, щоб узяти</th><th scope="col">Джерело</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Peek Pro</th><td>брифінг дня</td><td>Екран гіда починається реченням, а не сіткою: <span class="q">«Hi Guide 👋 / Today is Wednesday, Aug 30»</span>, далі — наступний тур, скільки турів сьогодні й за 7 днів, погода</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/peekpro-focus-screens.png" data-title="PeekPro Focus — екран гіда" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">Bókun</th><td>відмітити людей на місці зустрічі</td><td>Екран «Pick ups»: на кожному туристі дві великі кнопки <b>Arrived / No-show</b></td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/bokun-app-screens.png" data-title="Bókun — Pick ups" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">Google Calendar</th><td>побачити, що сьогодні</td><td>Колір як носій сенсу: тип події зчитується до читання слів</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/google-calendar-app-screens.png" data-title="Google Calendar — екрани застосунку" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">Wanderlog</th><td>побудувати послідовність точок</td><td>Номер на піні = номер у списку; чипи днів окремим рядком; нотатка на точці <span class="q">«Get photo of bridge!»</span>; кнопка «Optimize route»</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/wanderlog-app-screen-4.png" data-title="Wanderlog — карта з пронумерованими пінами" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">TripIt</th><td>переслати лист і забути</td><td><span class="q">«Simply forward it to plans@tripit.com and we'll automatically add it to your comprehensive itinerary»</span></td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/tripit-travel-planner/id311035142">App Store</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <caption>Вісь 4 — Довіра</caption>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">Що показують</th><th scope="col">Що видно за фасадом</th><th scope="col">Джерело</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Peek Pro</th>
+            <td>Позиціювання «AI operating system». Логотипи преси й «+30% доходу» — <span class="unver">не підтверджено</span></td>
+            <td><b>PeekPro Focus: 5.0★ із 2 оцінок.</b> Останнє оновлення — «Resolved a login issue», версія 1.7.0. Копірайт © 2023. Застосунок для гідів від лідера ринку майже ніхто не оцінив</td>
+            <td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/peekpro-focus-guide-app.png" data-title="PeekPro Focus — 5.0★ із 2 оцінок" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td>
+          </tr>
+          <tr>
+            <th scope="row">Bókun</th>
+            <td>«Tripadvisor company». Capterra 4.9/5 і «2600+ майданчиків» — <span class="unver">не підтверджено</span></td>
+            <td><b>Застосунок: 2.3★ із 7 оцінок.</b> Дослівно: <span class="q">«I don't get notifications from new bookings, the calendar works…»</span> · <span class="q">«Useless app with zero functionality. You can see daily bookings but cannot edit anything»</span></td>
+            <td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/bokun/id1500788456?see-all=reviews&amp;platform=iphone">App Store, відгуки</a></td>
+          </tr>
+          <tr><th scope="row">Google Calendar</th><td>4.5★, 131 тис. оцінок</td><td>Довіра максимальна. Це і є причина, чому гід звідти не піде</td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/google-calendar/id909319292">App Store</a></td></tr>
+          <tr><th scope="row">Wanderlog</th><td>Спільнота: маршрути й гайди інших мандрівників <span class="unver">частково не підтверджено</span></td><td>—</td><td class="src-cell"><button class="src shot" type="button" data-shot="research/screens/wanderlog-app-screen-1.png" data-title="Wanderlog — загальний вигляд" style="background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;">скрін</button></td></tr>
+          <tr><th scope="row">TripIt</th><td><b>4.8★ із 308 тис. оцінок.</b> У застосунку — смуга довіри: NYT, Forbes, Travel+Leisure</td><td>Найсильніша позиція з п'ятьох</td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/tripit-travel-planner/id311035142">App Store</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:1.25rem;">
+      <p><strong>Число оцінок Bókun важливіше за саму оцінку.</strong> 2.3★ — це середнє з <strong>семи</strong> відгуків. Сім оцінок означає, що застосунком майже ніхто не користується: судити за ними про якість не можна, а от про попит — можна.</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <caption>Вісь 5 — Монетизація</caption>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">Модель</th><th scope="col">Скільки коштує</th><th scope="col">Джерело</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Peek Pro</th><td>Ціни не називають</td><td><code>peek.com/pricing</code> — 404. Публічної ціни немає</td><td class="src-cell">перевірено 11.08.2026</td></tr>
+          <tr><th scope="row">Bókun</th><td>Підписка + комісія</td><td>Free $0 (1 користувач, без онлайн-продажу) · Start $49/міс + 1.5% · Plus $149/міс + 1.25% · Premium $499/міс + 1%</td><td class="src-cell"><a class="src" href="https://www.bokun.io/pricing">bokun.io/pricing</a></td></tr>
+          <tr><th scope="row">Google Calendar</th><td>Безкоштовно</td><td>$0, є вбудовані покупки</td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/google-calendar/id909319292">App Store</a></td></tr>
+          <tr><th scope="row">Wanderlog</th><td>Freemium</td><td>Pro $39.99/рік. <b>Офіційної сторінки цін відкрити не вдалося</b> (404), дані зі сторонніх оглядів</td><td class="src-cell"><a class="src" href="https://monkeyeatingmango.com/blog/wanderlog-pricing-2026/">сторонній огляд</a></td></tr>
+          <tr><th scope="row">TripIt</th><td>Freemium</td><td>Pro <b>$48.99/рік</b> вбудованою покупкою</td><td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/tripit-travel-planner/id311035142">App Store</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Скріни, на які спирається розділ</h3>
+    <div class="shots">
+      <figure>
+        <button class="zoom" type="button" data-shot="research/screens/peekpro-focus-screens.png" data-title="PeekPro Focus — екран гіда">
+          <img src="research/screens/peekpro-focus-screens.png" alt="Екран PeekPro Focus: привітання, дата, наступний тур, погода" loading="lazy">
+        </button>
+        <figcaption><b>PeekPro Focus — екран гіда</b>Брифінг реченням, а не сіткою. Єдиний у вибірці, хто починає з «Hi Guide».<span class="fn">peekpro-focus-screens.png</span></figcaption>
+      </figure>
+      <figure>
+        <button class="zoom" type="button" data-shot="research/screens/bokun-app-screens.png" data-title="Bókun — екрани застосунку">
+          <img src="research/screens/bokun-app-screens.png" alt="Екрани Bókun: Departure Details, Pick ups з кнопками Arrived і No-show, Scan" loading="lazy">
+        </button>
+        <figcaption><b>Bókun — Pick ups</b>Дві великі кнопки на кожному туристі: Arrived / No-show. Одна дія одним пальцем.<span class="fn">bokun-app-screens.png</span></figcaption>
+      </figure>
+      <figure>
+        <button class="zoom" type="button" data-shot="research/screens/tripit-app-screen-2.png" data-title="TripIt — день як вертикальна лінія">
+          <img src="research/screens/tripit-app-screen-2.png" alt="TripIt: день поїздки як вертикальна лінія з іконками рейсу, авто, готелю" loading="lazy">
+        </button>
+        <figcaption><b>TripIt — день як лінія</b>Вертикальна лінія з іконками, статус-чипи «On Time», ключові факти жирним.<span class="fn">tripit-app-screen-2.png</span></figcaption>
+      </figure>
+      <figure>
+        <button class="zoom" type="button" style="--pos: center 46%;" data-shot="research/screens/wanderlog-app-screen-4.png" data-title="Wanderlog — карта з пронумерованими пінами">
+          <img src="research/screens/wanderlog-app-screen-4.png" alt="Wanderlog: карта з пронумерованими пінами, чипи днів, нотатка на точці" loading="lazy">
+        </button>
+        <figcaption><b>Wanderlog — маршрут по точках</b>Номер на піні = номер у списку. Власна нотатка просто на точці.<span class="fn">wanderlog-app-screen-4.png</span></figcaption>
+      </figure>
+      <figure>
+        <button class="zoom" type="button" data-shot="research/screens/peekpro-focus-guide-app.png" data-title="PeekPro Focus — сторінка App Store">
+          <img src="research/screens/peekpro-focus-guide-app.png" alt="Сторінка App Store застосунку PeekPro Focus: 5.0 зірки з 2 оцінок" loading="lazy">
+        </button>
+        <figcaption><b>PeekPro Focus — сторінка App Store</b>5.0★ із 2 оцінок. «Resolved a login issue», © 2023.<span class="fn">peekpro-focus-guide-app.png</span></figcaption>
+      </figure>
+      <figure>
+        <button class="zoom" type="button" data-shot="research/screens/bokun-app-reviews.png" data-title="Bókun — відгук на 2★">
+          <img src="research/screens/bokun-app-reviews.png" alt="Відгук на застосунок Bókun: App Calendar is useless, дві зірки" loading="lazy">
+        </button>
+        <figcaption><b>Bókun — відгук на 2★</b>На кадрі видно <b>один</b> відгук, не загальну оцінку. 2.3★ із 7 — зі сторінки App Store.<span class="fn">bokun-app-reviews.png</span></figcaption>
+      </figure>
+    </div>
+
+    <h3>Що з цього видно</h3>
+    <ul class="plain">
+      <li><b>Усі п'ять організовані навколо часу — і жоден не тримає змісту екскурсії.</b> Календар, стрічка, маршрут по днях відповідають на «коли і де». На «що я зараз говорю людям» не відповідає ніхто, включно з PeekPro Focus, зробленим саме для гідів. Це порожнє місце рівно там, де TourMate ставить «Тур наживо».</li>
+      <li><b>Дані не вводять руками — їх ловлять.</b> TripIt зі скриньки, Google Calendar із Gmail. Ручне введення є, але воно запасний вихід.</li>
+      <li><b>Безкоштовний вхід є, але у професійних це воронка.</b> Bókun Free — $0 і одразу стеля: один користувач, без онлайн-продажу, зате «Zero fees on Viator». А Viator — того самого власника.</li>
+      <li><b>Прозорість ціни ділить ринок навпіл.</b> Bókun, TripIt, Checkfront і Rezgo називають ціну публічно. Peek Pro не називає взагалі. Гіпотеза: ховати ціну — ознака того, що твій покупець не одинак.</li>
+    </ul>
+
+    <h3>Спільний біль ринку — гіпотеза</h3>
+    <div class="callout" style="border-color:color-mix(in srgb, var(--accent) 22%, var(--line));">
+      <p style="font-family:var(--serif);font-size:1.2rem;line-height:1.4;">Інформація про один день розсипана по різних місцях, і людина щоразу збирає її в голові заново.</p>
+      <p style="color:var(--muted);font-size:0.93rem;">Виведено з продуктів і відгуків, <strong>не з розмов із гідами</strong>.</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <caption>Кожен із п'ятьох — машина для збирання розсипаного</caption>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">Що було розсипане</th><th scope="col">У що складає</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">TripIt</th><td>підтвердження в пошті</td><td>одна стрічка дня</td></tr>
+          <tr><th scope="row">Google Calendar</th><td>домовленості й листи</td><td>одна сітка годин</td></tr>
+          <tr><th scope="row">Bókun</th><td>броні з каналів продажу</td><td>один список на чек-ін</td></tr>
+          <tr><th scope="row">Peek Focus</th><td>броні, зміни, погода</td><td>один брифінг словами</td></tr>
+          <tr><th scope="row">Wanderlog</th><td>місця й посилання</td><td>один маршрут по точках</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote"><strong>Як перевірити.</strong> Питання на інтерв'ю: «Покажи, куди ти дивишся зранку перед туром» — і порахувати, скільки застосунків гід відкриє. Якщо один — гіпотеза хибна.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 02 ══════════════ -->
+<section class="part" id="benchmark">
+  <div class="wrap">
+    <div class="part-head">
+      <span class="part-num">02</span>
+      <h2>Бенчмарк</h2>
+      <p>Скільки роботи треба зробити людині, щоб зрозуміти свій день, — і скільки з цієї роботи бере на себе застосунок.</p>
+    </div>
+
+    <div class="col">
+      <p class="lead">Тут ми виходимо за межі туризму навмисно: цю задачу вирішують у десятках галузей, і найкращі рішення лежать не в нашій категорії.</p>
+    </div>
+
+    <div class="callout warn" style="margin-top:1.5rem;">
+      <p class="k">Обмеження методу</p>
+      <p>Застосунки <strong>не встановлювали й не тестували руками</strong>. Усе нижче спирається на заявлені виробником функції, сторінки App Store і огляди. Оцінки — наше судження на основі цих джерел, а не вимірювання в роботі.</p>
+    </div>
+
+    <h3>Вісім критеріїв, шкала 1–5</h3>
+    <p class="col">Для кожного описано, що таке «1» і що таке «5», — інакше оцінка буде настроєм.</p>
+    <div class="scroller">
+      <table>
+        <thead><tr><th scope="col">№</th><th scope="col">Критерій</th><th scope="col">1 бал</th><th scope="col">5 балів</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">К1</th><td><b>Автозбір</b><br><span style="color:var(--muted);font-size:0.88rem;">скільки потрапляє без введення</span></td><td>усе заводиш руками</td><td>приходить саме — з пошти, календаря, зовнішніх джерел</td></tr>
+          <tr><th scope="row">К2</th><td><b>Час до розуміння</b></td><td>треба вчитуватися й перемикати екрани</td><td>зрозуміло до того, як прочитав слова</td></tr>
+          <tr><th scope="row">К3</th><td><b>Одна лінія</b></td><td>розкидано по вкладках</td><td>один потік у порядку часу</td></tr>
+          <tr><th scope="row">К4</th><td><b>Фокус на «зараз»</b></td><td>усі пункти однакові</td><td>поточний виділений, око чіпляється першим</td></tr>
+          <tr><th scope="row">К5</th><td><b>Поведінка при зламі плану</b></td><td>нічого не знає, переробляй руками</td><td>попереджає сам і показує, що тепер</td></tr>
+          <tr><th scope="row">К6</th><td><b>Приходить без відкриття</b></td><td>треба відкрити застосунок</td><td>видно, не розблокувавши телефон</td></tr>
+          <tr><th scope="row">К7</th><td><b>Зміст під рукою</b></td><td>тільки логістика</td><td>зміст і є продуктом</td></tr>
+          <tr><th scope="row">К8</th><td><b>Робота в русі</b></td><td>щільний інтерфейс, дрібний текст</td><td>великі цілі, hands-free, читається на ходу</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">К7 і К8 додані навмисно: це те, що потрібне розділу «Тур наживо».</p>
+
+    <h3>П'ять продуктів — і чому саме вони</h3>
+    <p class="col">Жоден не має стосунку до екскурсій. Це навмисно.</p>
+    <div class="scroller">
+      <table>
+        <thead><tr><th scope="col">Продукт</th><th scope="col">Ніша</th><th scope="col">Підтверджене джерелом</th><th scope="col">Джерело</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Flighty</th><td>стеження за рейсами</td>
+            <td>Тягне рейси <span class="q">«from your calendar, TripIt, or your email»</span>; стежить за бортом <b>за 25 годин до вильоту</b>; машинне навчання бачить запізнення за 6 годин; окремо стежить за розпорядженнями авіадиспетчерів. Обіцяє сповістити <span class="q">«before anyone else, even the pilot»</span></td>
+            <td class="src-cell"><a class="src" href="https://flighty.com/">flighty.com</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Structured</th><td>планувальник дня</td>
+            <td>Drag-and-drop лінія дня; Pro підключає календарі й Reminders; інтерактивні віджети й Live Activities. <b>4.8★, 164 тис. оцінок, Editors' Choice</b></td>
+            <td class="src-cell"><a class="src" href="https://apps.apple.com/us/app/structured-daily-planner-todo/id1499198946">App Store</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Fantastical</th><td>календар</td>
+            <td>Google, Outlook, Exchange, iCloud, CalDAV в одному вигляді; подія створюється фразою <span class="q">«Lunch with Sarah at 1pm tomorrow»</span>; Calendar Sets; DayTicker; 14 віджетів</td>
+            <td class="src-cell"><a class="src" href="https://flexibits.com/fantastical">flexibits.com</a></td>
+          </tr>
+          <tr>
+            <th scope="row">OnSong + forScore</th><td>музикант на сцені</td>
+            <td>OnSong: <span class="q">«Your hands are busy when playing an instrument»</span> — педалі, автоскрол <span class="q">«like a teleprompter»</span>, sticky notes на чарті, вокальні підказки в навушник. forScore Pro: гортання сторінок мімікою — рухом губ, поворотом голови, підморгуванням</td>
+            <td class="src-cell"><a class="src" href="https://onsongapp.com/docs/features/">onsongapp.com</a><br><a class="src" href="https://forscore.co/face-gestures/">forscore.co</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Sunsama</th><td>планування роботи</td>
+            <td>Щоденний ритуал: тягне задачі з Asana, Jira, Notion, GitHub, Trello, Gmail в один день; увечері переносить незроблене</td>
+            <td class="src-cell"><a class="src" href="https://www.sunsama.com/daily-planning">sunsama.com</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Оцінки</h3>
+    <div class="scroller">
+      <table class="scores">
+        <caption>Підсвічені клітинки — ті, на яких тримається висновок</caption>
+        <thead>
+          <tr>
+            <th scope="col">Продукт</th>
+            <th scope="col" class="n" title="Автозбір">К1</th>
+            <th scope="col" class="n" title="Час до розуміння">К2</th>
+            <th scope="col" class="n" title="Одна лінія">К3</th>
+            <th scope="col" class="n" title="Фокус на «зараз»">К4</th>
+            <th scope="col" class="n" title="Поведінка при зламі">К5</th>
+            <th scope="col" class="n" title="Приходить без відкриття">К6</th>
+            <th scope="col" class="n" title="Зміст під рукою">К7</th>
+            <th scope="col" class="n" title="Робота в русі">К8</th>
+            <th scope="col" class="sum">Σ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Flighty</th><td class="n">5</td><td class="n">5</td><td class="n">4</td><td class="n">5</td><td class="n hi">5</td><td class="n">5</td><td class="n lo">2</td><td class="n">4</td><td class="sum">35</td></tr>
+          <tr><th scope="row">Structured</th><td class="n">3</td><td class="n">5</td><td class="n hi">5</td><td class="n">5</td><td class="n">2</td><td class="n">4</td><td class="n">2</td><td class="n">4</td><td class="sum">30</td></tr>
+          <tr><th scope="row">OnSong / forScore</th><td class="n lo">1</td><td class="n">4</td><td class="n">5</td><td class="n">5</td><td class="n">3</td><td class="n">1</td><td class="n hi">5</td><td class="n hi">5</td><td class="sum">29</td></tr>
+          <tr><th scope="row">Fantastical</th><td class="n">4</td><td class="n">4</td><td class="n">4</td><td class="n">3</td><td class="n">2</td><td class="n">5</td><td class="n">2</td><td class="n">3</td><td class="sum">27</td></tr>
+          <tr><th scope="row">Sunsama</th><td class="n">4</td><td class="n">3</td><td class="n">5</td><td class="n">3</td><td class="n">3</td><td class="n">2</td><td class="n">3</td><td class="n">1</td><td class="sum">24</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:1.5rem;border-color:color-mix(in srgb, var(--accent) 22%, var(--line));">
+      <p class="k" style="color:var(--accent);">Головне — не сума, а два крайні рядки</p>
+      <p><strong>Flighty: 5 за збирання, 2 за зміст. OnSong: 1 за збирання, 5 за зміст.</strong></p>
+      <p style="color:var(--muted);">Вони стоять на протилежних кінцях нашого болю. Продукту, який робить обидва, серед найкращих у світі немає — принаймні ми такого не знайшли.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 03 ══════════════ -->
+<section class="part" id="paterny">
+  <div class="wrap">
+    <div class="part-head">
+      <span class="part-num">03</span>
+      <h2>Патерни</h2>
+      <p>П'ять способів побудувати головний екран. Вони різні за <strong>віссю</strong>, навколо якої зібраний екран, а не за оформленням.</p>
+    </div>
+
+    <div class="callout" style="border-style:dashed;">
+      <p style="color:var(--muted);font-size:0.94rem;">Цей розділ — наше проєктне міркування. Джерела тут стоять на прикладах (що який продукт робить), а не на висновках (кому що підходить).</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th scope="col">Патерн</th><th scope="col">Вісь</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1. Стрічка часу</th><td>час: що після чого</td></tr>
+          <tr><th scope="row">2. Картка «зараз»</th><td>увага: одна річ, решта схована</td></tr>
+          <tr><th scope="row">3. Карта</th><td>простір: де і куди далі</td></tr>
+          <tr><th scope="row">4. Вхідні / черга</th><td>невирішене: мета — порожній екран</td></tr>
+          <tr><th scope="row">5. Зведення</th><td>стан цілого: числа замість елементів</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tnote">Бібліотеку (полиця, пошук по тегах) і розмову (введення фразою) свідомо не беремо: перша — це розділ «Матеріали», друга — спосіб <strong>вводити</strong>, а не показувати.</p>
+
+    <div class="pattern col">
+      <h3>1. Стрічка часу</h3>
+      <dl>
+        <dt>Як працює</dt>
+        <dd>Усе шикується в один вертикальний стовпець у порядку годин, поточне підсвічене, минуле згортається.</dd>
+        <dt>Де</dt>
+        <dd>TripIt — день як вертикальна лінія; Structured — уся суть продукту; Bókun — вкладка Schedule.</dd>
+        <dt>Підходить</dt>
+        <dd>Коли подій кілька і важливий порядок між ними.</dd>
+        <dt>Ламається</dt>
+        <dd class="break">Коли подія одна — лінія з одного пункту виглядає як помилка завантаження. І коли в події немає точного часу.</dd>
+      </dl>
+    </div>
+
+    <div class="pattern col">
+      <h3>2. Картка «зараз»</h3>
+      <dl>
+        <dt>Як працює</dt>
+        <dd>Екран показує рівно одну річ — поточну або найближчу. Решта прихована. Часто живе поза застосунком: віджет, екран блокування.</dd>
+        <dt>Де</dt>
+        <dd>Flighty — гейт, час, стрічка багажу «all at a glance», плюс Live Activities; OnSong — одна пісня сетлиста на екрані.</dd>
+        <dt>Підходить</dt>
+        <dd>Коли в кожен момент правильна відповідь одна, дивляться 3–5 секунд, руки зайняті.</dd>
+        <dt>Ламається</dt>
+        <dd class="break">Коли треба порівняти або спланувати — «чи встигну між турами?». Одна картка не дає відчуття цілого. І коли «зараз» невизначене — у вихідний екран мовчить.</dd>
+      </dl>
+    </div>
+
+    <div class="pattern col">
+      <h3>3. Карта</h3>
+      <dl>
+        <dt>Як працює</dt>
+        <dd>Об'єкти розкладені по географії, порядок передається номерами на пінах, час вторинний.</dd>
+        <dt>Де</dt>
+        <dd>Wanderlog — пронумеровані піни, чипи днів, «Optimize route».</dd>
+        <dt>Підходить</dt>
+        <dd>Коли головне питання — «де» і «куди далі фізично».</dd>
+        <dt>Ламається</dt>
+        <dd class="break">Без інтернету, на сонці, і коли людина знає місцевість напам'ять: гіду карта його власного маршруту не каже нічого нового, а забирає весь екран.</dd>
+      </dl>
+    </div>
+
+    <div class="pattern col">
+      <h3>4. Вхідні / черга рішень</h3>
+      <dl>
+        <dt>Як працює</dt>
+        <dd>Показує лише те, що чекає на рішення. Обробив — зникло. Мета — порожній екран.</dd>
+        <dt>Де</dt>
+        <dd>Bókun «Pick ups» із кнопками Arrived / No-show.</dd>
+        <dt>Підходить</dt>
+        <dd>Коли є потік чужих запитів і головний ризик — прогавити.</dd>
+        <dt>Ламається</dt>
+        <dd class="break">Коли потоку немає — порожній екран читається як зламаний застосунок. І коли черга живе деінде — тоді людина веде дві черги замість однієї.</dd>
+      </dl>
+    </div>
+
+    <div class="pattern col">
+      <h3>5. Зведення</h3>
+      <dl>
+        <dt>Як працює</dt>
+        <dd>Не показує елементи, а згортає їх у кілька чисел і статусів, часто реченням.</dd>
+        <dt>Де</dt>
+        <dd>PeekPro Focus: «Hi Guide 👋 / Today is Wednesday, Aug 30», далі — скільки турів сьогодні й за 7 днів, погода.</dd>
+        <dt>Підходить</dt>
+        <dd>Коли елементів багато і поодинці вони нецікаві.</dd>
+        <dt>Ламається</dt>
+        <dd class="break">На малих числах. «У тебе 1 тур сьогодні» — це не зведення, а речення.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 04 ══════════════ -->
+<section class="part" id="vysnovky">
+  <div class="wrap">
+    <div class="part-head">
+      <span class="part-num">04</span>
+      <h2>Висновки</h2>
+      <p>Усе в цій секції — <strong>наші рішення й гіпотези</strong>, а не факти з джерел. Спираються на секції вище.</p>
+    </div>
+
+    <h3>Який патерн лягає на наш контекст</h3>
+    <div class="verdict">
+      <div class="yes">
+        <span class="tag">Найкраще</span>
+        <h4>Картка «зараз»</h4>
+        <p><b>1.</b> <code>idea.md</code> описує проблему через момент: «під час самої екскурсії підглянути в це все незручно». Не «даних забагато», а «незручно дивитися, коли зайнятий».</p>
+        <p><b>2.</b> Даних мало: один-два тури на день <span class="unver">не підтверджено</span>. Стрічка й зведення потребують обсягу; для картки один елемент — нормальний стан.</p>
+        <p><b>3.</b> Один патерн покриває обидва перші розділи: у «Розкладі» картка — найближчий тур, у «Турі наживо» — поточна точка.</p>
+      </div>
+      <div class="maybe">
+        <span class="tag">Другий, за умови X</span>
+        <h4>Стрічка часу</h4>
+        <p><b>X:</b> у гіда регулярно більше ніж один тур на день. Тоді питання зміщується з «що зараз» на «чи встигаю між групами».</p>
+        <p>Практично: картка «зараз» зверху, під нею коротка лінія решти дня. У міжсезоння лінія порожня, у сезон наповнюється.</p>
+        <p>Саму умову треба перевірити інтерв'ю.</p>
+      </div>
+      <div class="no">
+        <span class="tag">Не підходить</span>
+        <h4>Вхідні / черга</h4>
+        <p><b>Черга живе не в нас.</b> Запис народжується як повідомлення у WhatsApp і там же обробляється. Вхідні в TourMate були б другою чергою поруч із першою.</p>
+        <p><b>Ми нижче за течією.</b> Патерн обіцяє «покажу тобі, що нового» — обіцянка, яку ми не можемо виконати.</p>
+        <p><b>Порожньо буде нормою.</b> У гіда-одинака нічого не накопичується.</p>
+      </div>
+    </div>
+    <p class="tnote">Карту й зведення не викидаємо — у них інше місце: карта як другорядний вигляд усередині «Туру наживо», зведення — у розділі «Клієнти й гроші», де числа накопичуються за місяць і сезон.</p>
+
+    <h3>Три механізми в MVP</h3>
+    <ol class="steps">
+      <li><b>Пересилання замість введення</b><span>TripIt приймає маршрут на <code>plans@tripit.com</code>, Flighty тягне з пошти й календаря, Fantastical витягає подію з листа. Ніхто не робив «зручну форму» — усі зробили спосіб її не заповнювати. Для нас: гід вставляє повідомлення з месенджера, з тексту витягаються ім'я, дата, кількість людей. У першій версії — екран «вставити текст», без інтеграцій.</span></li>
+      <li><b>Одна вертикальна лінія з підсвіченим «зараз»</b><span>Structured і TripIt дійшли до цього з різних боків. Важливо, що це <b>не</b> сітка годин: у сітці Google уже переміг (4.5★, 131 тис. оцінок), а лінія — інша форма, де його перевага не працює.</span></li>
+      <li><b>Сетлист як каркас «Туру наживо»</b><span>У OnSong виступ — це впорядкований список, на екрані один пункт, перехід далі без рук, на пункті власні нотатки-підказки. Тур = список точок, те саме. Педалі гіду не поставиш, але велика ціль під великий палець — можна.</span></li>
+    </ol>
+
+    <h3>Один механізм, який не спрацює</h3>
+    <div class="callout warn">
+      <p class="k">Проактивне попередження про злам плану</p>
+      <p>Найспокусливіше в таблиці: Flighty обіцяє сповістити <span class="q">«before anyone else, even the pilot»</span>.</p>
+      <p>Не спрацює, бо <strong>інформації немає</strong>. Flighty стоїть на потоці даних, якого в нас нема: борти, розклади авіакомпаній, розпорядження диспетчерів. Наше джерело зміни — повідомлення туриста в месенджері, і воно приходить <strong>гіду</strong>. Ми не можемо попередити людину про те, що вона щойно прочитала у своєму телефоні.</p>
+      <p>«Розумні сповіщення» в MVP вийдуть звичайним будильником — тим, що в гіда вже є. Обіцяти передбачення, а дати таймер — спосіб втратити довіру на першому тижні.</p>
+      <p style="color:var(--muted);"><strong>Натомість:</strong> зробити дешевою реакцію. Прочитав «переносимо на завтра» — вніс за два дотики. Виграємо не розумом, а швидкістю.</p>
+    </div>
+
+    <h3>Що перевірити інтерв'ю</h3>
+    <p class="col">У порядку важливості.</p>
+    <ol class="steps">
+      <li><b>Чи ставив гід колись застосунок для роботи і що з ним сталося</b><span>PeekPro Focus має 5.0★ із <b>2 оцінок</b>. Лідер ринку зробив застосунок для гідів, і його майже ніхто не оцінив. Або погане просування, або гідам такий інструмент не потрібен. Розрізнити ці дві версії важливіше за будь-яку функцію.</span></li>
+      <li><b>Чи зберігає гід тексти екскурсії — і де</b><span>Жоден із п'яти не тримає змісту. Або ніша порожня, або потреби немає. «Тур наживо» — головна відмінність TourMate, тож питання не можна відкладати.</span></li>
+      <li><b>Скільки турів на день у сезон і в міжсезоння</b><span>Від цього залежить умова X і взагалі вибір між карткою і стрічкою.</span></li>
+      <li><b>Дивиться чи редагує з телефона</b><span>Скарги на Bókun — усі про редагування, але це відгуки операторів із персоналом, а не одинаків.</span></li>
+      <li><b>«Покажи, куди ти дивишся зранку перед туром»</b><span>Перевірка гіпотези про спільний біль: скільки застосунків гід відкриє.</span></li>
+    </ol>
+
+    <h3>Сценарії — гіпотези, не перевірені</h3>
+    <ul class="plain">
+      <li><b>Ранок робочого дня.</b> Гід відкриває телефон і за кілька секунд бачить: коли сьогодні тур, скільки людей, де зустріч.</li>
+      <li><b>Новий запис.</b> Турист написав у месенджері. Гід вносить його в тур, не виходячи з розмови надовго.</li>
+      <li><b>Під час екскурсії.</b> Гід на маршруті, руки зайняті, дивиться в екран 5–10 секунд — треба зрозуміти, куди далі й що сказати.</li>
+    </ul>
+    <p class="tnote">Джерело всіх трьох — <code>idea.md</code> і наші припущення. Інтерв'ю не проводили: жодного.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>TourMate — дизайн-репозиторій. Ця сторінка зібрана з <code>research/research.md</code>; там же живе текстова версія з усіма посиланнями.</p>
+    <p>Наступний крок — вайрфрейми розділу «Розклад».</p>
+  </div>
+</footer>
+
+<dialog class="box" id="box">
+  <div class="box-bar">
+    <p id="box-title"></p>
+    <button type="button" id="box-close">Закрити</button>
+  </div>
+  <div class="box-scroll" id="box-scroll"></div>
+</dialog>
+
+<script>
+(function () {
+  // ---- лайтбокс для скрінів ----
+  var box = document.getElementById('box');
+  var scroll = document.getElementById('box-scroll');
+  var title = document.getElementById('box-title');
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-shot]');
+    if (t) {
+      var caption = t.getAttribute('data-title') || '';
+      var img = document.createElement('img');
+      img.src = t.getAttribute('data-shot');
+      img.alt = caption;
+      scroll.replaceChildren(img);
+      scroll.scrollTop = 0;
+      title.textContent = caption;
+      if (typeof box.showModal === 'function') box.showModal();
+      return;
+    }
+    if (e.target === box) box.close();
+  });
+
+  document.getElementById('box-close').addEventListener('click', function () { box.close(); });
+  box.addEventListener('close', function () { scroll.replaceChildren(); });
+
+  // ---- підсвітка активної секції ----
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.parts a'));
+  var parts = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+
+  function mark() {
+    var y = window.scrollY + window.innerHeight * 0.28;
+    var active = 0;
+    parts.forEach(function (p, i) { if (p && p.offsetTop <= y) active = i; });
+    links.forEach(function (a, i) {
+      if (i === active) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+
+  var tick = false;
+  window.addEventListener('scroll', function () {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(function () { mark(); tick = false; });
+  }, { passive: true });
+  mark();
+})();
+</script>
+
+</body>
+</html>
