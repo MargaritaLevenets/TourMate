@@ -47,7 +47,7 @@ App Store — це офіційні кадри продукту від сами�
 |---|---|
 | `bokun-pricing.png` | Сторінка цін: Free $0 / Start $49 / Plus $149 / Premium $499 на місяць |
 | `bokun-app-screens.png` | Екрани застосунку: «Departure Details», «Pick ups» зі станами Arrived / No-show, «Scan». Нижня навігація: Schedule · Pick-ups · Scan · Settings |
-| `bokun-app-reviews.png` | Відгуки на застосунок — 2.3★. Скарги: «календар працює лише по днях», «нічого не можна відредагувати», «немає сповіщень про нові броні» |
+| `bokun-app-reviews.png` | Один відгук на 2★: «App Calendar is useless», 14.04.2024. **Увага:** загальної оцінки 2.3★ і решти цитат на цьому кадрі **не видно** — вони взяті зі [сторінки відгуків App Store](https://apps.apple.com/us/app/bokun/id1500788456?see-all=reviews&platform=iphone), перевірено 11.08.2026 |
 | `bokun-login-dostup-obmezheno.png` | **Доступ обмежений.** Вхід у продукт: «Welcome back!», вхід через Google або через Viator |
 
 ### Google Calendar
